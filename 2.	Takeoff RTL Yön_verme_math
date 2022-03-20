@@ -1,0 +1,104 @@
+# import sdkdef
+
+A = (-9, -7)
+B = (9, -7)
+C = (-9, -15)
+D = (9, -15)
+short_edge = 0
+if (A[0] <= 0 and A[1] >= 0) and (B[0] <= 0 and B[1] >= 0) and (C[0] <= 0 and C[1] >= 0) and (D[0] <= 0 and D[1] >= 0):
+    print("sağa git ve aşağı git")
+    # sdkdef.manualControl(0,50,450,0)
+if (A[0] >= 0 and A[1] >= 0) and (B[0] >= 0 and B[1] >= 0) and (C[0] >= 0 and C[1] >= 0) and (D[0] >= 0 and D[1] >= 0):
+    print("sola git ve aşağı git")
+
+if (A[0] >= 0 and A[1] <= 0) and (B[0] > 0 and B[1] < 0) and (C[0] > 0 and C[1] < 0) and (D[0] >= 0 and D[1] <= 0):
+    print("sağa git ve yukarı git")
+
+if (A[0] < 0 and A[1] < 0) and (B[0] < 0 and B[1] < 0) and (C[0] < 0 and C[1] < 0) and (D[0] < 0 and D[1] < 0):
+    print("sola git ve yukarı git")
+# ------------------------------------------------------------------------------------------------------------------
+if (A[0] < 0 and A[1] > 0) and (B[0] < 0 and B[1] > 0) and (C[0] < 0 and C[1] < 0) and (D[0] < 0 and D[1] < 0):
+    # sağ
+    short_edge = abs(A[0] - B[0])
+    M_long_edge = abs(A[1] - 0)
+    J_long_edge = abs(C[1] - 0)
+
+    if M_long_edge * short_edge > J_long_edge * short_edge:
+        print("sağ ve aşağı")
+    elif M_long_edge * short_edge < J_long_edge * short_edge:
+        print("sağ ve yukarı")
+    else:
+        print("sağ")
+if (A[0] < 0 and A[1] > 0) and (B[0] > 0 and B[1] > 0) and (C[0] < 0 and C[1] > 0) and (D[0] > 0 and D[1] > 0):
+    # sol
+    short_edge = abs(A[0] - B[0])
+    M_long_edge = abs(A[1] - 0)
+    J_long_edge = abs(C[1] - 0)
+
+    if M_long_edge * short_edge > J_long_edge * short_edge:
+        print("sol ve aşağı")
+    elif M_long_edge * short_edge < J_long_edge * short_edge:
+        print("sol ve yukarı")
+
+    else:
+        print("sol")
+
+if (A[0] > 0 and A[1] > 0) and (B[0] > 0 and B[1] > 0) and (C[0] > 0 and C[1] < 0) and (D[0] > 0 and D[1] < 0):
+    # aşağı
+    long_edge = abs(A[1] - C[1])
+    M_short_edge = abs(A[0] - 0)
+    J_short_edge = abs(B[0] - 0)
+
+    if M_short_edge * long_edge > J_short_edge * long_edge:
+        print("sağ ve aşağı")
+    elif M_short_edge * long_edge < J_short_edge * long_edge:
+        print("sol ve aşağı")
+
+    else:
+        print("aşağı")
+
+if (A[0] <= 0 and A[1] <= 0) and (B[0] >= 0 and B[1] <= 0) and (C[0] <= 0 and C[1] <= 0) and (D[0] >= 0 and D[1] <= 0):
+    # yukarı
+    long_edge = abs(A[1] - C[1])
+    M_short_edge = abs(A[0] - 0)
+    J_short_edge = abs(B[0] - 0)
+
+    if M_short_edge * long_edge > J_short_edge * long_edge:
+        print("sağ ve yukarı")
+    elif M_short_edge * long_edge < J_short_edge * long_edge:
+        print("sol ve yukarı")
+
+    else:
+        print("yukarı")
+# -----------------------------------------------------------------------------------------
+if (A[0] <= 0 and A[1] >= 0) and (B[0] <= 0 and B[1] <= 0) and (C[0] >= 0 and C[1] >= 0) and (D[0] >= 0 and D[1] <= 0):
+    M_edge_1 = abs(A[0] - 0)
+    M_edge_2 = abs(A[1] - 0)
+
+    O_edge_1 = abs(C[0] - 0)
+    O_edge_2 = abs(C[1] - 0)
+
+    J_edge_1 = abs(B[0] - 0)
+    J_edge_2 = abs(B[1] - 0)
+
+    K_edge_1 = abs(D[0] - 0)
+    K_edge_2 = abs(D[1] - 0)
+
+    if M_edge_1 * M_edge_2 > ((O_edge_1 * O_edge_2) and (J_edge_1 * J_edge_2) and (K_edge_1 * K_edge_2)):
+        print("Sağ ve Aşağı")
+    elif O_edge_1 * O_edge_2 > ((M_edge_1 * M_edge_2) and (J_edge_1 * J_edge_2) and (K_edge_1 * K_edge_2)):
+        print("Sol ve Aşağı")
+    elif J_edge_1 * J_edge_2 > ((O_edge_1 * O_edge_2) and (M_edge_1 * M_edge_2) and (K_edge_1 * K_edge_2)):
+        print("Sağ ve Yukarı")
+    elif K_edge_1 * K_edge_2 > ((M_edge_1 * M_edge_2) and (J_edge_1 * J_edge_2) and (O_edge_1 * O_edge_2)):
+        print("Sol ve Yukarı")
+    elif M_edge_1 * M_edge_2 == (O_edge_1 * O_edge_2) > ((J_edge_1 * J_edge_2) and (K_edge_1 * K_edge_2)):
+        print("Aşağı ve Sağ veya Sol")
+    elif M_edge_1 * M_edge_2 == (J_edge_1 * J_edge_2) > ((O_edge_1 * O_edge_2) and (K_edge_1 * K_edge_2)):
+        print("Sağ ve Yukarı veya Aşağı")
+    elif K_edge_1 * K_edge_2 == (J_edge_1 * J_edge_2) > ((O_edge_1 * O_edge_2) and (M_edge_1 * M_edge_2)):
+        print("Yukarı ve Sağ veya Sol")
+    elif K_edge_1 * K_edge_2 == (O_edge_1 * O_edge_2) > ((J_edge_1 * J_edge_2) and (M_edge_1 * M_edge_2)):
+        print("Sol ve Aşağı veya Yukarı")
+    else:
+        print("Sağ veya Sol ve/veya Aşağı veya Yukarı")
