@@ -1,0 +1,41 @@
+import time
+
+from pymavlink import mavutil
+
+
+deneme1 = mavutil.mavlink_connection('tcp:localhost:5762')
+
+
+deneme1.wait_heartbeat()
+
+deneme1.mav.command_long_send(deneme1.target_system,deneme1.target_component,
+                            mavutil.mavlink.MAV_CMD_SET_MESSAGE_INTERVAL,0,
+                            24,1,0,0,0,0,0)
+#24 MESAJ ı GPS_RAW_INT ID numarası
+
+flag1 = True
+while True:
+
+
+    msg = deneme1.recv_msg()
+    if msg:
+        print(msg)
+
+    if flag1 == True:
+
+
+        deneme1.mav.set_mode_send(deneme1.target_system,
+                                mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,4)
+
+        deneme1.mav.command_long_send(deneme1.target_system,deneme1.target_component,
+                                  mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM, 0, 1, 0, 0, 0, 0, 0, 0)
+        flag1 = False
+        time.sleep(2)
+        deneme1.mav.command_long_send(deneme1.target_system, deneme1.target_component,
+                                    22, 0, 0, 0, 0, 0, 0, 0, 10)
+        # 22 değeri MAV_CMD_NAV_TAKEOFF yerine yazılmıştır.
+
+        time.sleep(10)
+
+        deneme1.mav.command_long_send(deneme1.target_system,deneme1.target_component,
+                                    mavutil.mavlink.MAV_CMD_NAV_RETURN_TO_LAUNCH,0,0,0,0,0,0,0,0)
