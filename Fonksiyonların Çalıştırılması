@@ -1,0 +1,35 @@
+import Ders4
+import time
+
+#Ders4.py dosyasındaki oluşturduğumuz kütüphaneler ile
+#görüntü işleme yazılımının koşacağı demo aşağıdaki kodlarda bulunur.
+
+auto_mod = 3
+guided_mod = 4
+loiter_mod = 5
+RTL_mod = 6
+flag =1
+while True:
+
+    if flag == 1:
+        Ders4.mesajiste()
+        time.sleep(2)
+        Ders4.mesajlar()
+        time.sleep(2)
+        Ders4.moddegis(guided_mod)
+        Ders4.arm()
+        time.sleep(2)
+        Ders4.Takeoff(5)
+        time.sleep(2)
+        #Ders4.moddegis(auto_mod)
+        Ders4.moddegis(10)
+
+        flag = 0
+
+    Ders4.mesajlar()
+    Ders4.manualConrtol(1000,0,1000)
+    Ders4.moddegis(RTL_mod)
+    print("batarya : ", Ders4.batarya)
+
+
+
