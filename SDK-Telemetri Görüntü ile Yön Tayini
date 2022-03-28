@@ -1,0 +1,82 @@
+import time
+from pymavlink import mavutil
+
+Height = 0
+
+auto_mod = 3
+guided_mod = 4
+loiter_mod = 5
+RTL_mod = 6
+message = ""
+
+ders1 = mavutil.mavlink_connection('tcp:localhost:5762')
+
+ders1.wait_heartbeat()
+
+ders1.mav.command_long_send(ders1.target_system,ders1.target_component,
+                            mavutil.mavlink.MAV_CMD_SET_MESSAGE_INTERVAL,0,
+                            24,1,0,0,0,0,0)
+#24 MESAJ ı GPS_RAW_INT ID numarası
+ders1.mav.command_long_send(ders1.target_system, ders1.target_component, mavutil.mavlink.MAV_CMD_SET_MESSAGE_INTERVAL,
+                           0, mavutil.mavlink.MAVLINK_MSG_ID_SYS_STATUS,1,0,0,0,0,0)
+#durum mesajları
+ders1.mav.command_long_send(ders1.target_system, ders1.target_component, mavutil.mavlink.MAV_CMD_SET_MESSAGE_INTERVAL,
+                           0, mavutil.mavlink.MAVLINK_MSG_ID_STATUSTEXT ,1,0,0,0,0,0)
+#yaptığı görevler ve otopilot mesajları
+batarya = 0
+latitude = 0
+longitude = 0
+altitude = 0
+velocity = 0
+fix_type = 0
+fix_types = {0: "NO GPS", 1: "NO FIX", 2: "2DFIX", 3: "3DFIX", 4: "DGPS", 5: "RTKF",
+            6: "RTX FIX", 7: "STATIC", 8: "PPP"}
+GPS = 0
+
+flag1 = True
+while True:
+
+    msg = ders1.recv_msg()
+    if msg:
+        #print(msg)
+
+        if msg.get_type() == 'SYS_STATUS':
+            batarya = msg.to_dict()["voltage_battery"]
+
+        if msg.get_type() == 'GPS_RAW_INT':
+            fix_type = fix_types[msg.to_dict()["fix_type"]]
+            latitude = msg.to_dict()["lat"]
+            longitude= msg.to_dict()["lon"]
+            altitude = msg.to_dict()["alt"]
+            velocity = msg.to_dict()["vel"]
+            GPS      = msg.to_dict()["satellites_visible"]
+        if msg.get_type() == 'STATUSTEXT':
+            message = msg.to_dict()["text"]
+    # mesajlar alındı ayrıştırıldı
+    if message == "Reached command #36":
+            ders1.mav.set_mode_send(ders1.target_system,
+                                    mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, RTL_mod)
+    #görev mesajlarında "Reached command #36" geldiğinde yani 36. waypoint bittiğinde mod değiştirme komutu
+    print(" Enlem : ",latitude," Boylam : ",longitude," Rakım : ",altitude,
+          " Hız : ",velocity, " GPS : ",GPS," GPS Fix : ",fix_type, " Batarya : ", batarya, " Mesajlar : ", message)
+    #dataları print et
+    if flag1 == True:
+
+        ders1.mav.set_mode_send(ders1.target_system,
+                                mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,4)
+        #guided moda alınır
+        ders1.mav.command_long_send(ders1.target_system,ders1.target_component,
+                                  mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM, 0, 1, 0, 0, 0, 0, 0, 0)
+        #arm etmesi sağlanır
+        flag1 = False
+        time.sleep(2)
+        ders1.mav.command_long_send(ders1.target_system, ders1.target_component,
+                                    22, 0, 0, 0, 0, 0, 0, 0, 10)
+        #takeoff komutu gönderilir.
+        # 22 değeri mavutil.mavlink.MAV_CMD_NAV_TAKEOFF yerine yazılabilir..
+
+        time.sleep(2)
+
+        ders1.mav.set_mode_send(ders1.target_system,
+                                mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, auto_mod)
+        #auto moda alınır ve hafızadaki görev başlatılır
